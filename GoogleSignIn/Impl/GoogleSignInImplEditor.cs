@@ -105,7 +105,12 @@ namespace Google.Impl
           Debug.Log(task);
           var context = task.Result;
           var queryString = context.Request.Url.Query;
+
+#if NETSTANDARD
           var queryDictionary = System.Web.HttpUtility.ParseQueryString(queryString);
+#else
+          var queryDictionary = context.Request.QueryString;
+#endif
           if(queryDictionary == null || queryDictionary.Get("code") is not string code || string.IsNullOrEmpty(code))
           {
             Status = GoogleSignInStatusCode.INVALID_ACCOUNT;
